@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: ./.docker/nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - php
+      - postgresql
+  php:
+    build:
+      context: .
+      dockerfile: ./.docker/php-fpm/Dockerfile
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - postgresql
+  postgresql:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: softexpert
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ase321
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgresql/170420240901_create_users_table.sql:/docker-entrypoint-initdb.d/170420240901_create_users_table.sql
+      - ./.docker/postgresql/170420240902_insert_users_data.sql:/docker-entrypoint-initdb.d/170420240902_insert_users_data.sql
+      - ./.docker/postgresql/170420241001_create_product_table.sql:/docker-entrypoint-initdb.d/170420241001_create_product_table.sql
+      - ./.docker/postgresql/170420241002_insert_product_data.sql:/docker-entrypoint-initdb.d/170420241002_insert_product_data.sql
+      - ./.docker/postgresql/170420241050_create_product_type_table.sql:/docker-entrypoint-initdb.d/170420241050_create_product_type_table.sql
+      - ./.docker/postgresql/170420241051_insert_product_type_data.sql:/docker-entrypoint-initdb.d/170420241051_insert_product_type_data.sql
+      - ./.docker/postgresql/170420241101_create_product_product_type_table.sql:/docker-entrypoint-initdb.d/170420241101_create_product_product_type_table.sql
+      - ./.docker/postgresql/170420241102_insert_product_product_type_data.sql:/docker-entrypoint-initdb.d/170420241102_insert_product_product_type_data.sql

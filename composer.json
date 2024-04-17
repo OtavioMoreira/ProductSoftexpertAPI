@@ -1,0 +1,8 @@
+{
+    "name": "productsoftexpertapi/product",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    }
+}
