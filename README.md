@@ -51,7 +51,7 @@ Utilizei para facilitar a interação com os CRUDs do banco de dados
 Trabalhei com um arquivo makefile para facilitar e estruturar os comandos que serão executados.
 ### Start Project
     make up
-    make install
+    make composer-install
     
 ### Stop Project
     make stop
@@ -106,6 +106,15 @@ ___
 |product type rel|product_id           			 |INTEGER  REFERENCES products(id)    |
 |-				 |product_type_id			     |INTEGER  REFERENCES products_type(id)|
 |-				 |created_At					 |TIMESTAMP  DEFAULT CURRENT_TIMESTAMP|
+___
+|    Table       |Column                         |Type                         		  |
+|----------------|-------------------------------|------------------------------------|
+|sales      	 | id                            |SERIAL  PRIMARY KEY   	          |
+|-				 |user_id	            	     |INT NOT NULL				          |
+|-				 |product_id					 |INT NOT NULL						  |
+|-				 |qtd					         |INT NOT NULL  					  |
+|-				 |totalValue					 |DECIMAL(10, 2)					  |
+|-				 |created_At					 |TIMESTAMP  DEFAULT CURRENT_TIMESTAMP|
 
 # Autenticação 
 Criei um sistema semelhante a JWT, porem não usei nenhuma biblioteca.
@@ -113,7 +122,7 @@ Consiste em uma sequencia de metodos:
 - Valida a autenticação pelo email e senha
 - Gera um **bearer token** e salva em uma tabela de relacionamento
 - Os métodos verificam se o usuário esta autenticado pelo **token**
-- Possui uma **Schedule** no banco de dados para excluir o **token** a cara 4 horas, essa **Schedule** executa a cada hora.
+- Possui uma **rotina** no arquivo de rotas para excluir o **token** a cara 4 horas, essa **rotina** executa toda a vez que o arquivo e chamado.
 ```mermaid
 sequenceDiagram
 User ->> Auth: Envia uma requisicao <br> com nome e senha
@@ -121,5 +130,5 @@ User -->> Auth: Validacao do usuario
 Auth ->> Relation Table: Salva o token em uma <br> tabela de relacionamento
 Methods -->> Relation Table: Validam se o token ainda esta ativo
 Methods ->> User: Devolvem a requisicao para o usuario
-Schedule -->> Relation Table: Valida e exclui a data de expiracao do token a cada hora
+Methods -->> Relation Table: Valida e exclui a data de expiracao do token a cada hora
 ```

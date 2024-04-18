@@ -1,2 +1,2 @@
 INSERT INTO users (username, email, password) 
-VALUES ('admin', 'admin@admin.com', '12345');
+VALUES ('admin', 'admin@admin.com', MD5('12345'));

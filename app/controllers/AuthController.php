@@ -51,7 +51,7 @@ class AuthController
      */
     public function validateCredentials($email, $password)
     {
-        $where = "email = '" . $email . "' AND password = '" . $password . "'";
+        $where = "email = '" . $email . "' AND password = '" . md5($password) . "'";
         $objDatabase = new Database('users');
         $result = $objDatabase->select($where)->fetchAll(PDO::FETCH_CLASS, self::class);
 
@@ -173,6 +173,23 @@ class AuthController
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
             return false;
+        }
+    }
+
+    /**
+     * The function `deleteExpiredTokens` deletes expired tokens from a database table.
+     * 
+     * @return a boolean value `true` if the deletion of expired tokens is successful.
+     */
+    public function deleteExpiredTokens() {
+        try {
+            $objDatabase = new Database('tokens');
+            $where = "expiration <= NOW()";
+            $objDatabase->delete($where);
+
+            return true;
+        } catch (\Exception $e) {
+            echo "Erro ao excluir tokens expirados: " . $e->getMessage();
         }
     }
 }

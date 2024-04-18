@@ -14,19 +14,19 @@ class ProductTypeController
     public $created_at;
 
     /**
-     * The function `getProducts` retrieves products from a database based on specified conditions and
-     * returns the results in JSON format.
+     * The function `getProductsType` retrieves product types based on specified conditions and returns
+     * the results in JSON format.
      * 
-     * @param where The `where` parameter in the `getProducts` function is used to filter the products
-     * based on specific conditions. In the provided code, the `where` parameter is initially set to
-     * `null` as a default value. However, it is then overwritten with an empty string ` = '';`
-     * @param order The `order` parameter in the `getProducts` function is used to specify the order in
-     * which the products should be retrieved from the database. It determines the sorting of the
-     * results based on a specific column or columns.
-     * @param limit The `limit` parameter in the `getProducts` function is used to specify the maximum
-     * number of products that should be returned in the result set. It limits the number of rows
-     * returned by the database query. If the `limit` parameter is not provided, all matching products
-     * will be returned.
+     * @param where The `where` parameter in the `getProductsType` function is used to filter the
+     * results based on specific conditions. In the provided code snippet, the `` variable is
+     * initially set to `null` as a default value. However, it is later overwritten with an empty
+     * string `''`
+     * @param order The `order` parameter in the `getProductsType` function is used to specify the
+     * order in which the results should be returned. It can be used to sort the results based on a
+     * specific column in ascending or descending order.
+     * @param limit The `limit` parameter in the `getProductsType` function is used to specify the
+     * maximum number of records to be returned from the database query. It limits the result set to a
+     * certain number of rows.
      */
     public function getProductsType($where = null, $order = null, $limit = null)
     {
@@ -55,16 +55,15 @@ class ProductTypeController
     }
 
     /**
-     * The function `addProducts` adds a new product to a database table with the provided item
-     * details.
+     * The function `addProductsType` adds a new product type to the database with the provided name,
+     * description, and percentage.
      * 
-     * @param item The `addProducts` function you provided seems to be adding a new product to a
-     * database table named 'products'. It takes an array `` as a parameter, which should contain
-     * the following keys:
+     * @param item 'name' => 'Electronics',
      * 
-     * @return The `addProducts` function is returning a boolean value `true` if the insertion of the
-     * product into the database is successful. If an exception occurs during the database insertion
-     * process, it will catch the exception and echo out the error message.
+     * @return The `addProductsType` function is returning a boolean value `true` if the insertion of
+     * the product type into the database is successful. If an exception occurs during the database
+     * insertion process, an error message will be echoed out but the function itself does not return
+     * anything in that case.
      */
     public function addProductsType($item)
     {
@@ -89,16 +88,16 @@ class ProductTypeController
     }
 
     /**
-     * The function `updateProducts` updates product information based on the provided data array.
+     * The function `updateProductsType` updates product type information based on the provided data.
      * 
-     * @param item The `updateProducts` function you provided is responsible for updating product
-     * information based on the data passed in the `` parameter. The `` parameter is expected
-     * to be an associative array containing information about the product to be updated. Here is an
-     * explanation of the keys that can be present in the
+     * @param item The `updateProductsType` function you provided seems to be updating product type
+     * information based on the `` array passed as a parameter. The function checks for specific
+     * keys in the `` array (such as 'name', 'description', and 'percentage'), updates the
+     * corresponding properties of the object
      * 
-     * @return The `updateProducts` function returns a boolean value. It returns `true` if the update
-     * operation was successful and at least one field was updated. It returns `false` if no fields
-     * were sent for updating or if an exception occurred during the update process.
+     * @return The `updateProductsType` function returns a boolean value. It returns `true` if the
+     * update operation was successful and `false` if there were no fields to update or if an exception
+     * occurred during the update process.
      */
     public function updateProductsType($item)
     {
@@ -136,14 +135,16 @@ class ProductTypeController
     }
 
     /**
-     * The function `deleteProducts` deletes a product from the database based on the provided ID.
+     * This PHP function deletes a product type from the database based on the provided ID.
      * 
-     * @param id The `deleteProducts` function you provided seems to be a method for deleting a product
-     * from a database table based on the given ID. The function takes an ID as a parameter and
-     * attempts to delete the corresponding product record from the 'products' table in the database.
+     * @param id The `deleteProductsType` function is designed to delete a record from the
+     * `products_type` table based on the provided `id`. The function takes an array as a parameter,
+     * and it expects the array to have an 'id' key which will be used to identify the record to be
+     * deleted.
      * 
-     * @return The `deleteProducts` function is returning a boolean value. It returns `true` if the
-     * deletion operation is successful, and `false` if an exception occurs during the process.
+     * @return a boolean value. If the deletion operation is successful, it will return true. If an
+     * exception occurs during the deletion process, it will catch the exception, display an error
+     * message, and return false.
      */
     public function deleteProductsType($id)
     {

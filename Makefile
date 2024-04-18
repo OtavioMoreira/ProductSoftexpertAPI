@@ -1,7 +1,7 @@
 # Start project
 up:
 	docker-compose up -d
-install:
+composer-install:
 	docker-compose exec php composer install
 # Stop project
 down:

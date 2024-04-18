@@ -3,12 +3,16 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use app\controllers\ProductController;
 use app\controllers\ProductTypeController;
+use app\controllers\SaleController;
 use app\controllers\AuthController;
+use app\controllers\UserController;
 use app\commands\ValidateMethods;
 
 /* This PHP code snippet is a basic routing mechanism for handling API requests. Let's break down what
 each part of the code is doing: */
 
+$login = new AuthController();
+$login->deleteExpiredTokens();
 $route = strtok($_SERVER['REQUEST_URI'], '?');
 $routeParts = explode('/', $route);
 
@@ -29,8 +33,15 @@ switch ($route) {
             exit();
         }
 
-        $login = new AuthController();
         $login->login($email, $password);
+
+        break;
+    case '/api/deleteExpiredTokens':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $login->deleteExpiredTokens();
 
         break;
     case '/api/logout':
@@ -38,7 +49,6 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->logoutRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $login = new AuthController();
         $login->logout($_SERVER['HTTP_AUTHORIZATION']);
         break;
     case '/api/validateToken':
@@ -46,8 +56,50 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $login = new AuthController();
         $login->validateToken($_SERVER['HTTP_AUTHORIZATION']);
+        break;
+    // User Routes
+    case '/api/getUsers':
+        // This route can used for get userById by params
+        // All users or userById
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validateGet($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_GET) ? $_GET : [];
+        $controller = new UserController();
+        $controller->getUsers($parameters);
+
+        break;
+    case '/api/addUsers':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new UserController();
+        $controller->addUsers($parameters);
+
+        break;
+    case '/api/deleteUsers':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new UserController();
+        $controller->deleteUsers($parameters);
+
+        break;
+    case '/api/updateUsers':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new UserController();
+        $controller->updateUsers($parameters);
+
         break;
     // Products Routes
     case '/api/getProducts':
@@ -133,6 +185,49 @@ switch ($route) {
         $parameters = isset($_POST) ? $_POST : [];
         $controller = new ProductTypeController();
         $controller->updateProductsType($parameters);
+
+        break;
+    // Sales Routes
+    case '/api/getSales':
+        // This route can used for get userById by params
+        // All users or userById
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validateGet($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_GET) ? $_GET : [];
+        $controller = new SaleController();
+        $controller->getSales($parameters);
+
+        break;
+    case '/api/addSales':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new SaleController();
+        $controller->addSales($parameters);
+
+        break;
+    case '/api/deleteSales':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new SaleController();
+        $controller->deleteSales($parameters);
+
+        break;
+    case '/api/updateSales':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_POST) ? $_POST : [];
+        $controller = new SaleController();
+        $controller->updateSales($parameters);
 
         break;
     default:

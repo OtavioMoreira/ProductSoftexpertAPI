@@ -38,5 +38,4 @@ services:
       - ./.docker/postgresql/170420241101_create_product_product_type_table.sql:/docker-entrypoint-initdb.d/170420241101_create_product_product_type_table.sql
       - ./.docker/postgresql/170420241102_insert_product_product_type_data.sql:/docker-entrypoint-initdb.d/170420241102_insert_product_product_type_data.sql
       - ./.docker/postgresql/170420241201_create_tokens_table.sql:/docker-entrypoint-initdb.d/170420241201_create_tokens_table.sql
-      - ./.docker/postgresql/170420241202_delete_expired_tokens.sql:/docker-entrypoint-initdb.d/170420241202_delete_expired_tokens.sql
-      - ./.docker/postgresql/170420241203_start_schedule_expired_tokens.sql:/docker-entrypoint-initdb.d/170420241203_start_schedule_expired_tokens.sql
+      - ./.docker/postgresql/170420241301_create_sale_table.sql:/docker-entrypoint-initdb.d/170420241301_create_sale_table.sql
