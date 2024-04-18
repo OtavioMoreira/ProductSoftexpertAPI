@@ -16,3 +16,5 @@ cache-clear:
 	docker builder prune --all
 autoload:
 	docker-compose exec php composer dump-autoload
+update:
+	docker-compose exec php composer update
