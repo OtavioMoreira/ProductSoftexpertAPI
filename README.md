@@ -37,6 +37,9 @@ Eu utilizei **ReactJs** e **NextJs**, segui a estrutura padrão dos frameworks.
 Tomei a liberdade de criar o ambiente todo em **docker**, um pouco diferente do solicitado. Fiz isso pois acredito que demonstre domínio sobre uma ferramenta muito importante sobre uma ferramenta relevante para a vaga.
 
 ## Bibliotecas e recursos
+### Insomnia
+Utilizei esse cliente de API e ambiente de teste para testar minhas requisicoes da API.
+-	Adicionei uma collection dele na raiz do projeto caso queiram testar.
 ### Composer
 Utilizei esse gerenciador de pacotes para baixar o autoload
 ### Autoload
