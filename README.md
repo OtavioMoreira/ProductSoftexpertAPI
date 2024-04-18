@@ -13,6 +13,7 @@ O que será necessário para **executar** o projeto.
 
 # Estrutura
 ## API (back-end)
+    | Project
     |-- .docker
     |   |-- nginx
     |   |-- php-fpm
