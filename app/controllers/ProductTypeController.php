@@ -5,13 +5,12 @@ namespace app\controllers;
 use app\config\Database;
 use PDO;
 
-class ProductController
+class ProductTypeController
 {
     public $id;
     public $name;
     public $description;
-    public $price;
-    public $qtd;
+    public $percentage;
     public $created_at;
 
     /**
@@ -29,7 +28,7 @@ class ProductController
      * returned by the database query. If the `limit` parameter is not provided, all matching products
      * will be returned.
      */
-    public function getProducts($where = null, $order = null, $limit = null)
+    public function getProductsType($where = null, $order = null, $limit = null)
     {
         $parameters = $_GET;
 
@@ -43,7 +42,7 @@ class ProductController
         }
 
         try {
-            $objDatabase = new Database('products');
+            $objDatabase = new Database('products_type');
             $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_CLASS, self::class);
 
             // echo "<pre>"; print_r($result); echo "</pre>"; exit;
@@ -67,21 +66,19 @@ class ProductController
      * product into the database is successful. If an exception occurs during the database insertion
      * process, it will catch the exception and echo out the error message.
      */
-    public function addProducts($item)
+    public function addProductsType($item)
     {
         // echo "<pre>"; print_r($item); echo "</pre>"; exit;
         $this->name = $item['name'];
         $this->description = $item['description'];
-        $this->price = $item['price'];
-        $this->qtd = $item['qtd'];
+        $this->percentage = $item['percentage'];
 
         try {
-            $objDatabase = new Database('products');
+            $objDatabase = new Database('products_type');
             $objDatabase->insert([
                 'name' => $this->name,
                 'description' => $this->description,
-                'price' => (float) $this->price,
-                'qtd' => (int) $this->qtd,
+                'percentage' => (int) $this->percentage,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
 
@@ -103,7 +100,7 @@ class ProductController
      * operation was successful and at least one field was updated. It returns `false` if no fields
      * were sent for updating or if an exception occurred during the update process.
      */
-    public function updateProducts($item)
+    public function updateProductsType($item)
     {
         $this->id = $item['id'];
         $updateData = [];
@@ -118,19 +115,14 @@ class ProductController
             $updateData['description'] = $this->description;
         }
 
-        if (isset($item['price'])) {
-            $this->price = (float) $item['price'];
-            $updateData['price'] = $this->price;
+        if (isset($item['percentage'])) {
+            $this->percentage = (int) $item['percentage'];
+            $updateData['percentage'] = $this->percentage;
         }
-
-        if (isset($item['qtd'])) {
-            $this->qtd = (int) $item['qtd'];
-            $updateData['qtd'] = $this->qtd;
-        }
-
+        
         try {
             if (!empty($updateData)) {
-                $objDatabase = new Database('products');
+                $objDatabase = new Database('products_type');
                 $objDatabase->update('id = ' . $this->id, $updateData);
 
                 return true;
@@ -153,13 +145,13 @@ class ProductController
      * @return The `deleteProducts` function is returning a boolean value. It returns `true` if the
      * deletion operation is successful, and `false` if an exception occurs during the process.
      */
-    public function deleteProducts($id)
+    public function deleteProductsType($id)
     {
         // echo "<pre>"; print_r($id); echo "</pre>"; exit;
         try {
             $this->id = $id['id'];
 
-            $objDatabase = new Database('products');
+            $objDatabase = new Database('products_type');
             $where = "id = '" . $this->id . "'";
             $objDatabase->delete($where);
 
