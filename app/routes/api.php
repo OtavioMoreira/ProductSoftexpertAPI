@@ -1,4 +1,17 @@
 <?php
+
+// Adiciona cabeçalhos CORS para permitir solicitações da origem do seu aplicativo React/Next.js
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Se a solicitação for do tipo OPTIONS, retorna apenas os cabeçalhos CORS e não executa mais nada
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use app\controllers\ProductController;
@@ -24,8 +37,11 @@ switch ($route) {
         $valiteRequests = new ValidateMethods();
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
 
-        $email = $_POST['email'] ?? null;
-        $password = $_POST['password'] ?? null;
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
+        $email = $requestData['email'] ?? null;
+        $password = $requestData['password'] ?? null;
 
         if (!$email || !$password) {
             http_response_code(400);
@@ -39,7 +55,6 @@ switch ($route) {
     case '/api/deleteExpiredTokens':
         $valiteRequests = new ValidateMethods();
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
-        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
         $login->deleteExpiredTokens();
 
@@ -58,7 +73,7 @@ switch ($route) {
 
         $login->validateToken($_SERVER['HTTP_AUTHORIZATION']);
         break;
-    // User Routes
+        // User Routes
     case '/api/getUsers':
         // This route can used for get userById by params
         // All users or userById
@@ -76,9 +91,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new UserController();
-        $controller->addUsers($parameters);
+        $controller->addUsers($requestData);
 
         break;
     case '/api/deleteUsers':
@@ -86,9 +103,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new UserController();
-        $controller->deleteUsers($parameters);
+        $controller->deleteUsers($requestData);
 
         break;
     case '/api/updateUsers':
@@ -96,12 +115,14 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new UserController();
-        $controller->updateUsers($parameters);
+        $controller->updateUsers($requestData);
 
         break;
-    // Products Routes
+        // Products Routes
     case '/api/getProducts':
         // This route can used for get userById by params
         // All users or userById
@@ -119,9 +140,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductController();
-        $controller->addProducts($parameters);
+        $controller->addProducts($requestData);
 
         break;
     case '/api/deleteProducts':
@@ -129,9 +152,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductController();
-        $controller->deleteProducts($parameters);
+        $controller->deleteProducts($requestData);
 
         break;
     case '/api/updateProducts':
@@ -139,12 +164,14 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductController();
-        $controller->updateProducts($parameters);
+        $controller->updateProducts($requestData);
 
         break;
-    // Products Type Routes
+        // Products Type Routes
     case '/api/getProductsType':
         // This route can used for get userById by params
         // All users or userById
@@ -162,9 +189,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductTypeController();
-        $controller->addProductsType($parameters);
+        $controller->addProductsType($requestData);
 
         break;
     case '/api/deleteProductsType':
@@ -172,9 +201,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductTypeController();
-        $controller->deleteProductsType($parameters);
+        $controller->deleteProductsType($requestData);
 
         break;
     case '/api/updateProductsType':
@@ -182,12 +213,14 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new ProductTypeController();
-        $controller->updateProductsType($parameters);
+        $controller->updateProductsType($requestData);
 
         break;
-    // Sales Routes
+        // Sales Routes
     case '/api/getSales':
         // This route can used for get userById by params
         // All users or userById
@@ -205,9 +238,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new SaleController();
-        $controller->addSales($parameters);
+        $controller->addSales($requestData);
 
         break;
     case '/api/deleteSales':
@@ -215,9 +250,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new SaleController();
-        $controller->deleteSales($parameters);
+        $controller->deleteSales($requestData);
 
         break;
     case '/api/updateSales':
@@ -225,9 +262,11 @@ switch ($route) {
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
 
-        $parameters = isset($_POST) ? $_POST : [];
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
         $controller = new SaleController();
-        $controller->updateSales($parameters);
+        $controller->updateSales($requestData);
 
         break;
     default:

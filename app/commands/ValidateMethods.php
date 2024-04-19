@@ -51,14 +51,10 @@ class ValidateMethods
      */
     public function authorizeRoute($authorizationHeader)
     {
-        $authorizationHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-        if (!$authorizationHeader || !preg_match('/^Bearer\s+(.*?)$/', $authorizationHeader, $matches)) {
-            http_response_code(401);
-            echo json_encode(array('message' => 'Authentication token not provided in proper format'));
-            exit();
-        }
+        $token = str_replace('Bearer ', '', $authorizationHeader);
 
-        $token = $matches[1];
+        // echo "<pre>"; print_r($authorizationHeader); echo "</pre>"; exit;
+
 
         if (!$token) {
             http_response_code(401);
@@ -69,7 +65,7 @@ class ValidateMethods
         $authController = new AuthController();
         if (!$authController->validateToken($token)) {
             http_response_code(401);
-            echo json_encode(array('message' => 'Invalid or expired authentication token'));
+            echo json_encode(array('message' => 'Invalid or expired authentication token', 'status' => 401));
             exit();
         }
     }

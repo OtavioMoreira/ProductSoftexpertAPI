@@ -7,7 +7,7 @@ use PDO;
 
 class AuthController
 {
-    /* These lines are defining properties of the `AuthController` class in PHP. Each property is
+   /* These lines are defining properties of the `AuthController` class in PHP. Each property is
     declared as public, meaning they can be accessed and modified from outside the class. Here's a
     brief explanation of each property: */
     public $id;
@@ -94,7 +94,7 @@ class AuthController
             ]);
 
             http_response_code(200);
-            echo json_encode(array('message' => 'Bearer ' . $this->token));
+            echo json_encode(array('message' => $this->token));
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
         }
@@ -143,8 +143,8 @@ class AuthController
             $objDatabase = new Database('tokens');
             $where = "token = '" . $token . "'";
             $result = $objDatabase->select($where)->fetchAll(PDO::FETCH_CLASS, self::class);
-
-            return true;
+            // print_r($token);
+            return $result;
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
         }
