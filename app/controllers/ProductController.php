@@ -12,6 +12,9 @@ class ProductController
     public $description;
     public $price;
     public $qtd;
+    public $product_id;
+    public $product_type_id;
+    public $old_product_type_id;
     public $created_at;
 
     /**
@@ -44,7 +47,9 @@ class ProductController
 
         try {
             $objDatabase = new Database('products');
-            $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_CLASS, self::class);
+            $fields = 'products.id, products.name, products.description, products.price, products.qtd, products.created_at, product_product_type.product_id, product_product_type.product_type_id';
+            $joinClause = 'LEFT JOIN product_product_type ON products.id = product_product_type.product_id';
+            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_CLASS, self::class);
 
             // echo "<pre>"; print_r($result); echo "</pre>"; exit;
 
@@ -69,15 +74,24 @@ class ProductController
      */
     public function addProducts($item)
     {
-        // echo "<pre>"; print_r($item); echo "</pre>"; exit;
         $this->name = $item['name'];
         $this->description = $item['description'];
         $this->price = $item['price'];
         $this->qtd = $item['qtd'];
+        $this->product_id = $item['product_id'];
+        $this->product_type_id = $item['product_type_id'];
+
+        try {
+            $this->existsByName($this->name);
+        } catch (\Exception $e) {
+            echo "Erro: ", $e->getMessage(), "\n";
+            return false;
+        }
 
         try {
             $objDatabase = new Database('products');
-            $objDatabase->insert([
+
+            $this->id = $objDatabase->insert([
                 'name' => $this->name,
                 'description' => $this->description,
                 'price' => (float) $this->price,
@@ -86,6 +100,42 @@ class ProductController
             ]);
 
             return true;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        } finally {
+            $objDatabase = new Database('product_product_type');
+            $objDatabase->insert([
+                'product_id' => $this->id,
+                'product_type_id' => $this->product_type_id,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+
+            return true;
+        }
+    }
+
+    /**
+     * The function `userExistsByName` checks if a user with a specific name exists in the database and
+     * returns false if not.
+     * 
+     * @param name The `userExistsByName` function seems to be checking if a user with a specific name
+     * exists in the database. The function constructs a SQL query to find a user by name and then
+     * attempts to fetch all the results using PDO.
+     * 
+     * @return The function `userExistsByName` is currently returning `false` regardless of whether a
+     * user with the given name exists in the database or not. This is because the function always
+     * returns `false` after executing the database query and does not check the result of the query to
+     * determine if a user with the given name exists.
+     */
+    public function existsByName($name)
+    {
+        try {
+            $where = "name = '" . $name . "'";
+
+            $objDatabase = new Database('products');
+            $objDatabase->select($where)->fetchAll(PDO::FETCH_CLASS, self::class);
+
+            return false;
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
         }
@@ -107,6 +157,7 @@ class ProductController
     {
         $this->id = $item['id'];
         $updateData = [];
+        $updateDataRel = [];
 
         if (isset($item['name'])) {
             $this->name = $item['name'];
@@ -129,10 +180,56 @@ class ProductController
         }
 
         try {
+            try {
+                $this->existsByName($this->name);
+            } catch (\Exception $e) {
+                echo "Erro: ", $e->getMessage(), "\n";
+                return false;
+            }
+
             if (!empty($updateData)) {
                 $objDatabase = new Database('products');
                 $objDatabase->update('id = ' . $this->id, $updateData);
 
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+
+    public function updateProductsRel($item)
+    {
+        $this->id = $item['id'];
+        $updateData = [];
+
+        // echo "<pre>"; print_r($this->id); echo "</pre>"; exit;
+
+        if (isset($item['product_id'])) {
+            $this->product_id = (int) $item['product_id'];
+            $updateData['product_id'] = $this->product_id;
+        }
+
+        if (isset($item['product_type_id'])) {
+            $this->product_type_id = (int) $item['product_type_id'];
+            $updateData['product_type_id'] = $this->product_type_id;
+        }
+
+        if (isset($item['old_product_type_id'])) {
+            $this->old_product_type_id = (int) $item['old_product_type_id'];
+        }
+        
+        try {
+            if (!empty($updateData)) {
+                $where = "product_id = " . $this->id . " AND product_type_id = " . $this->old_product_type_id;
+                // echo "<pre>"; print_r($where); echo "</pre>"; exit;
+
+                $objDatabaseRel = new Database('product_product_type');
+                $objDatabaseRel->update($where, $updateData);
+                
                 return true;
             } else {
                 return false;
@@ -161,6 +258,26 @@ class ProductController
 
             $objDatabase = new Database('products');
             $where = "id = '" . $this->id . "'";
+            $objDatabase->delete($where);
+
+            return true;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+            return false;
+        }
+    }
+
+    public function deleteProductsRel($id)
+    {
+        try {
+            $this->id = $id['id'];
+            $this->product_id = $id['product_id'];
+
+            // echo "<pre>"; print_r($this->id); echo "</pre>"; exit;
+            // echo "<pre>"; print_r($this->product_type_id); echo "</pre>"; exit;
+
+            $objDatabase = new Database('product_product_type');
+            $where = "product_id = '" . $this->id . "' AND product_type_id = '" . $this->product_type_id . "'";
             $objDatabase->delete($where);
 
             return true;

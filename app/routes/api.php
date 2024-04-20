@@ -143,6 +143,8 @@ switch ($route) {
         $jsonData = file_get_contents('php://input');
         $requestData = json_decode($jsonData, true);
 
+        // echo "<pre>"; print_r($requestData); echo "</pre>"; exit;
+
         $controller = new ProductController();
         $controller->addProducts($requestData);
 
@@ -159,7 +161,7 @@ switch ($route) {
         $controller->deleteProducts($requestData);
 
         break;
-    case '/api/updateProducts':
+    case '/api/deleteProductsRel':
         $valiteRequests = new ValidateMethods();
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
         $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
@@ -168,7 +170,35 @@ switch ($route) {
         $requestData = json_decode($jsonData, true);
 
         $controller = new ProductController();
+        $controller->deleteProductsRel($requestData);
+
+        break;
+    case '/api/updateProducts':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
+        // echo "<pre>"; print_r($requestData); echo "</pre>"; exit;
+
+        $controller = new ProductController();
         $controller->updateProducts($requestData);
+
+        break;
+    case '/api/updateProductsRel':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $jsonData = file_get_contents('php://input');
+        $requestData = json_decode($jsonData, true);
+
+        // echo "<pre>"; print_r($requestData); echo "</pre>"; exit;
+
+        $controller = new ProductController();
+        $controller->updateProductsRel($requestData);
 
         break;
         // Products Type Routes
@@ -191,6 +221,8 @@ switch ($route) {
 
         $jsonData = file_get_contents('php://input');
         $requestData = json_decode($jsonData, true);
+
+        // echo "<pre>"; print_r($jsonData); echo "</pre>"; exit;
 
         $controller = new ProductTypeController();
         $controller->addProductsType($requestData);

@@ -99,15 +99,28 @@ class Database
      * number of results specified in ``. The query is executed using the `execute` method, and
      * the result is returned.
      */
-    public function select($where = null, $order = null, $limit = null, $fields = '*')
+    // public function select($where = null, $order = null, $limit = null, $fields = '*')
+    // {
+    //     $where = strlen($where) ? 'WHERE ' . $where : '';
+    //     $order = strlen($order) ? 'ORDER BY' . $order : '';
+    //     $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
+
+    //     $query = 'SELECT * FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
+
+    //     // echo "<pre>"; print_r($query); echo "</pre>"; exit;
+
+    //     return $this->execute($query);
+    // }
+    public function select($where = null, $order = null, $limit = null, $fields = '*', $join = null)
     {
         $where = strlen($where) ? 'WHERE ' . $where : '';
-        $order = strlen($order) ? 'ORDER ' . $order : '';
+        $order = strlen($order) ? 'ORDER BY ' . $order : '';
         $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
+        $join = !empty($join) ? $join : '';
 
-        $query = 'SELECT * FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
+        // echo "<pre>"; print_r($join); echo "</pre>"; exit;
 
-        // echo "<pre>"; print_r($query); echo "</pre>"; exit;
+        $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $join . ' ' . $where . ' ' . $order . ' ' . $limit;
 
         return $this->execute($query);
     }
@@ -128,13 +141,17 @@ class Database
 
         // echo "<pre>"; print_r($binds); echo "</pre>"; exit;
 
-        $query = 'INSERT INTO ' . $this->table . ' (' . implode(",", $fields) . ') VALUES (' . implode(",", $binds) . ')';
+        $query = 'INSERT INTO ' . $this->table . ' (' . implode(",", $fields) . ') VALUES (' . implode(",", $binds) . ') RETURNING id';
         // echo "<pre>"; print_r($query); echo "</pre>"; exit;
-        // echo "<pre>"; print_r(array_values($values)); echo "</pre>"; exit;
 
-        $this->execute($query, array_values($values));
-
-        return $this->connection->lastInsertId();
+        try {
+            $stmt = $this->execute($query, array_values($values));
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row['id'];
+        } catch (PDOException $e) {
+            // Trate a exceção conforme necessário
+            die('ERROR: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -171,14 +188,15 @@ class Database
      * @return The `update` function is returning a boolean value `true` after executing the SQL query
      * to update the database record.
      */
-    public function update($where, $values) {
+    public function update($where, $values)
+    {
         // echo "<pre>"; print_r($values); echo "</pre>"; exit;
-        
+
         $fields  = array_keys($values);
         $values = array_values($values);
 
-        $query = 'UPDATE '.$this->table.' SET '.implode("=?,", $fields).'=? WHERE ' . $where;
-        
+        $query = 'UPDATE ' . $this->table . ' SET ' . implode("=?,", $fields) . '=? WHERE ' . $where;
+
         $this->execute($query, $values);
         return true;
     }

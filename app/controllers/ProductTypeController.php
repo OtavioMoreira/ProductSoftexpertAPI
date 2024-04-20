@@ -55,6 +55,33 @@ class ProductTypeController
     }
 
     /**
+     * The function existsByName checks if a product with a specific name exists in the database.
+     * 
+     * @param name The `existsByName` function you provided seems to be checking if a product with a
+     * specific name exists in the database. The function constructs a SQL query to select records
+     * where the name matches the provided ``, but it currently always returns `false` regardless
+     * of whether a matching record is found or not
+     * 
+     * @return The `existsByName` function is always returning `false`.
+     */
+    public function existsByName($name)
+    {
+        
+        try {
+            $where = "name = '" . $name . "'";
+            
+            $objDatabase = new Database('products_type');
+            $objDatabase->select($where)->fetchAll(PDO::FETCH_CLASS, self::class);
+
+            // echo "<pre>"; print_r($result); echo "</pre>"; exit;
+
+            return false;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
      * The function `addProductsType` adds a new product type to the database with the provided name,
      * description, and percentage.
      * 
@@ -67,12 +94,20 @@ class ProductTypeController
      */
     public function addProductsType($item)
     {
-        // echo "<pre>"; print_r($item); echo "</pre>"; exit;
         $this->name = $item['name'];
         $this->description = $item['description'];
         $this->percentage = $item['percentage'];
+        
+        // echo "<pre>"; print_r($this->name); echo "</pre>"; exit;
 
         try {
+            try {
+                $this->existsByName($this->name);
+            } catch (\Exception $e) {
+                echo "Erro: ", $e->getMessage(), "\n";
+                return false;
+            }
+
             $objDatabase = new Database('products_type');
             $objDatabase->insert([
                 'name' => $this->name,

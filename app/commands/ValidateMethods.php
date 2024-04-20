@@ -2,7 +2,9 @@
 
 namespace app\commands;
 
+use app\config\Database;
 use app\controllers\AuthController;
+use PDO;
 
 class ValidateMethods
 {

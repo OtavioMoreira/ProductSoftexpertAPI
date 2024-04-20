@@ -20,8 +20,6 @@ class AuthController
         $authController = new AuthController();
         $user_id = $authController->validateCredentials($email, $password);
 
-        // echo "<pre>"; print_r($user_id); echo "</pre>"; exit;
-
         if ($user_id) {
             $authController->generateToken($user_id);
         } else {
@@ -92,6 +90,8 @@ class AuthController
                 'token' => $this->token,
                 'expiration' => $this->expiration
             ]);
+
+            // echo "<pre>"; print_r($this); echo "</pre>"; exit;
 
             http_response_code(200);
             echo json_encode(array('message' => $this->token));

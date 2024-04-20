@@ -44,10 +44,13 @@ class SaleController
 
         try {
             $objDatabase = new Database('sales');
-            $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_CLASS, self::class);
-
-            // echo "<pre>"; print_r($result); echo "</pre>"; exit;
-
+            $joinClause = 'INNER JOIN users ON sales.user_id = users.id INNER JOIN products ON sales.product_id = products.id';
+            
+            $fields = 'sales.id AS sale_id, users.username AS user_name, products.name AS product_name, products.price AS product_price';
+            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Aqui você pode processar os resultados, se necessário
+    
             $jsonResult = json_encode($result);
             echo $jsonResult;
         } catch (\Exception $e) {
