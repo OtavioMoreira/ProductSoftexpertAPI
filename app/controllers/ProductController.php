@@ -42,17 +42,52 @@ class ProductController
                 $where .= ' AND ';
             }
 
-            $where .= "$key = '$value'";
+            $where .= "products.$key = '$value'";
+        }
+
+        // echo "<pre>"; print_r($where); echo "</pre>"; exit;
+
+        try {
+            $objDatabase = new Database('products');
+            $fields = 'products.id, products.name, products.description, products.price, products.qtd, products.created_at, product_product_type.product_id, product_product_type.product_type_id, products_type.percentage';
+            $joinClause = 'LEFT JOIN product_product_type ON products.id = product_product_type.product_id';
+            $joinClause .= ' LEFT JOIN products_type ON products.id = products_type.id';
+            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_CLASS, self::class);
+
+
+
+            $jsonResult = json_encode($result);
+            echo $jsonResult;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        }
+    }
+
+    public function getProductsEdit($where = null, $order = null, $limit = null)
+    {
+        $parameters = $_GET;
+
+        $where = '';
+        foreach ($parameters as $key => $value) {
+            if (!empty($where)) {
+                $where .= ' AND ';
+            }
+
+            $where .= "products.$key = '$value'";
         }
 
         try {
             $objDatabase = new Database('products');
-            $fields = 'products.id, products.name, products.description, products.price, products.qtd, products.created_at, product_product_type.product_id, product_product_type.product_type_id';
+
+
+            $fields = 'products.id, products.name, products.description, products.price, products.qtd, products.created_at, product_product_type.product_type_id, products_type.percentage';
             $joinClause = 'LEFT JOIN product_product_type ON products.id = product_product_type.product_id';
-            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_CLASS, self::class);
+            $joinClause .= ' LEFT JOIN products_type ON product_product_type.product_type_id = products_type.id';
 
-            // echo "<pre>"; print_r($result); echo "</pre>"; exit;
 
+            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_ASSOC);
+
+            // Converta o resultado para JSON e imprima
             $jsonResult = json_encode($result);
             echo $jsonResult;
         } catch (\Exception $e) {
@@ -221,7 +256,7 @@ class ProductController
         if (isset($item['old_product_type_id'])) {
             $this->old_product_type_id = (int) $item['old_product_type_id'];
         }
-        
+
         try {
             if (!empty($updateData)) {
                 $where = "product_id = " . $this->id . " AND product_type_id = " . $this->old_product_type_id;
@@ -229,7 +264,7 @@ class ProductController
 
                 $objDatabaseRel = new Database('product_product_type');
                 $objDatabaseRel->update($where, $updateData);
-                
+
                 return true;
             } else {
                 return false;

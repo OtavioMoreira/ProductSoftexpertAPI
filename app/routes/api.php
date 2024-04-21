@@ -135,6 +135,18 @@ switch ($route) {
         $controller->getProducts($parameters);
 
         break;
+    case '/api/getProductsEdit':
+        // This route can used for get userById by params
+        // All users or userById
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validateGet($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_GET) ? $_GET : [];
+        $controller = new ProductController();
+        $controller->getProductsEdit($parameters);
+
+        break;
     case '/api/addProducts':
         $valiteRequests = new ValidateMethods();
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
@@ -142,8 +154,6 @@ switch ($route) {
 
         $jsonData = file_get_contents('php://input');
         $requestData = json_decode($jsonData, true);
-
-        // echo "<pre>"; print_r($requestData); echo "</pre>"; exit;
 
         $controller = new ProductController();
         $controller->addProducts($requestData);
@@ -265,6 +275,18 @@ switch ($route) {
         $controller->getSales($parameters);
 
         break;
+    case '/api/getSalesEdit':
+        // This route can used for get userById by params
+        // All users or userById
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->validateGet($_SERVER['REQUEST_METHOD']);
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $parameters = isset($_GET) ? $_GET : [];
+        $controller = new SaleController();
+        $controller->getSalesEdit($parameters);
+
+        break;
     case '/api/addSales':
         $valiteRequests = new ValidateMethods();
         $valiteRequests->validatePost($_SERVER['REQUEST_METHOD']);
@@ -272,6 +294,8 @@ switch ($route) {
 
         $jsonData = file_get_contents('php://input');
         $requestData = json_decode($jsonData, true);
+
+        // echo "<pre>"; print_r($requestData); echo "</pre>"; exit;
 
         $controller = new SaleController();
         $controller->addSales($requestData);

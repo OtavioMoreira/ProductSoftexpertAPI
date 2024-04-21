@@ -11,7 +11,10 @@ class SaleController
     public $user_id;
     public $product_id;
     public $qtd;
-    public $totalValue;
+    public $purchaseValue;
+    public $taxValue;
+    public $totalValuePurchase;
+    public $totalTaxValuePurchase;
     public $created_at;
 
     /**
@@ -44,19 +47,49 @@ class SaleController
 
         try {
             $objDatabase = new Database('sales');
-            $joinClause = 'INNER JOIN users ON sales.user_id = users.id INNER JOIN products ON sales.product_id = products.id';
-            
-            $fields = 'sales.id AS sale_id, users.username AS user_name, products.name AS product_name, products.price AS product_price';
+            $joinClause = 'LEFT JOIN users ON sales.user_id = users.id';
+            $joinClause .= ' LEFT JOIN products ON sales.product_id = products.id';
+            $joinClause .= ' LEFT JOIN product_product_type ON products.id = product_product_type.product_id';
+            $joinClause .= ' LEFT JOIN products_type ON product_product_type.product_type_id = products_type.id';
+
+            $fields = 'sales.id AS sale_id, users.username AS user_name, products.name AS products_name, products.price AS products_price, sales.qtd AS products_qtd, products_type.percentage AS products_percentage';
             $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_ASSOC);
-    
-            // Aqui você pode processar os resultados, se necessário
-    
+           
             $jsonResult = json_encode($result);
             echo $jsonResult;
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
         }
     }
+
+    public function getSalesEdit($where = null, $order = null, $limit = null)
+    {
+        $parameters = $_GET;
+
+        $where = '';
+        foreach ($parameters as $key => $value) {
+            if (!empty($where)) {
+                $where .= ' AND ';
+            }
+
+            $where .= "$key = '$value'";
+        }
+
+        try {
+            $objDatabase = new Database('sales');
+
+            $fields = '*';
+            $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_ASSOC);
+
+            // echo "<pre>"; print_r($binds); echo "</pre>"; exit;
+
+            $jsonResult = json_encode($result);
+            echo $jsonResult;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        }
+    }
+
 
     /**
      * The function `addSales` inserts sales data into a database table based on the provided item
@@ -76,7 +109,10 @@ class SaleController
         $this->user_id = $item['user_id'];
         $this->product_id = $item['product_id'];
         $this->qtd = $item['qtd'];
-        $this->totalValue = $item['totalValue'];
+        $this->purchaseValue = $item['purchaseValue'];
+        $this->taxValue = $item['taxValue'];
+        $this->totalValuePurchase = $item['totalValuePurchase'];
+        $this->totalTaxValuePurchase = $item['totalTaxValuePurchase'];
 
         try {
             $objDatabase = new Database('sales');
@@ -84,7 +120,10 @@ class SaleController
                 'user_id' => $this->user_id,
                 'product_id' => $this->product_id,
                 'qtd' => (int) $this->qtd,
-                'totalValue' => (float) $this->totalValue,
+                'purchaseValue' => (float) $this->purchaseValue,
+                'taxValue' => (float) $this->taxValue,
+                'totalValuePurchase' => (float) $this->totalValuePurchase,
+                'totalTaxValuePurchase' => (float) $this->totalTaxValuePurchase,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
 
@@ -125,9 +164,24 @@ class SaleController
             $updateData['qtd'] = $this->qtd;
         }
 
-        if (isset($item['totalValue'])) {
-            $this->totalValue = (float) $item['totalValue'];
-            $updateData['totalValue'] = $this->totalValue;
+        if (isset($item['purchaseValue'])) {
+            $this->purchaseValue = (float) $item['purchaseValue'];
+            $updateData['purchaseValue'] = $this->purchaseValue;
+        }
+
+        if (isset($item['taxValue'])) {
+            $this->taxValue = (float) $item['taxValue'];
+            $updateData['taxValue'] = $this->taxValue;
+        }
+
+        if (isset($item['totalValuePurchase'])) {
+            $this->totalValuePurchase = (float) $item['totalValuePurchase'];
+            $updateData['totalValuePurchase'] = $this->totalValuePurchase;
+        }
+
+        if (isset($item['totalTaxValuePurchase'])) {
+            $this->totalTaxValuePurchase = (float) $item['totalTaxValuePurchase'];
+            $updateData['totalTaxValuePurchase'] = $this->totalTaxValuePurchase;
         }
 
         try {

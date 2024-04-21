@@ -99,26 +99,13 @@ class Database
      * number of results specified in ``. The query is executed using the `execute` method, and
      * the result is returned.
      */
-    // public function select($where = null, $order = null, $limit = null, $fields = '*')
-    // {
-    //     $where = strlen($where) ? 'WHERE ' . $where : '';
-    //     $order = strlen($order) ? 'ORDER BY' . $order : '';
-    //     $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
 
-    //     $query = 'SELECT * FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
-
-    //     // echo "<pre>"; print_r($query); echo "</pre>"; exit;
-
-    //     return $this->execute($query);
-    // }
     public function select($where = null, $order = null, $limit = null, $fields = '*', $join = null)
     {
         $where = strlen($where) ? 'WHERE ' . $where : '';
         $order = strlen($order) ? 'ORDER BY ' . $order : '';
         $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
         $join = !empty($join) ? $join : '';
-
-        // echo "<pre>"; print_r($join); echo "</pre>"; exit;
 
         $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $join . ' ' . $where . ' ' . $order . ' ' . $limit;
 
