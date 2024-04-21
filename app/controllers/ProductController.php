@@ -190,9 +190,9 @@ class ProductController
      */
     public function updateProducts($item)
     {
+        // echo "<pre>"; print_r($item); echo "</pre>"; exit;
         $this->id = $item['id'];
         $updateData = [];
-        $updateDataRel = [];
 
         if (isset($item['name'])) {
             $this->name = $item['name'];
@@ -241,7 +241,7 @@ class ProductController
         $this->id = $item['id'];
         $updateData = [];
 
-        // echo "<pre>"; print_r($this->id); echo "</pre>"; exit;
+        // echo "<pre>"; print_r($item); echo "</pre>"; exit;
 
         if (isset($item['product_id'])) {
             $this->product_id = (int) $item['product_id'];
