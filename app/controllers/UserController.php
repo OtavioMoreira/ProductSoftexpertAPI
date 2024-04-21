@@ -102,7 +102,14 @@ class UserController
     {
         $this->username = $item['username'];
         $this->email = $item['email'];
-        $this->password = md5($item['password']);
+
+        $password = $item['password'];
+        if (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/', $password)) {
+            echo "Erro: A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter no mínimo 6 caracteres.\n";
+            return false;
+        }
+
+        $this->password = md5($password);
 
         try {
             try {
@@ -154,7 +161,13 @@ class UserController
         }
 
         if (isset($item['password'])) {
-            $this->password = md5($item['password']);
+            $password = $item['password'];
+            if (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/', $password)) {
+                echo "Erro: A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número, um caractere especial e ter no mínimo 6 caracteres.\n";
+                return false;
+            }
+
+            $this->password = md5($password);
             $updateData['password'] = $this->password;
         }
 
