@@ -11,6 +11,11 @@ O que será necessário para **executar** o projeto.
 	- **PASS**: ase321
 	- **PORT**: 5432
 
+## Login
+**email**: admin@admin.com
+
+**password**: Teste123@
+
 # Estrutura
 ## API (back-end)
     | Project
