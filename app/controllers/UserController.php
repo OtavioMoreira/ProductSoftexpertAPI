@@ -36,7 +36,7 @@ class UserController
      * parameter, the function will only return that number of records. If you do not provide a value
      * for the `limit
      */
-    public function getUsers($where = null, $order = ' username ASC', $limit = null)
+    public function getUsers($where = null, $order = null, $limit = null)
     {
         $parameters = $_GET;
 
@@ -51,6 +51,7 @@ class UserController
 
         try {
             $objDatabase = new Database('users');
+            $order = 'username ASC';
             $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_CLASS, self::class);
 
             // echo "<pre>"; print_r($result); echo "</pre>"; exit;

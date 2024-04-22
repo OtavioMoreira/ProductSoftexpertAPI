@@ -41,6 +41,8 @@ class ProductTypeController
             $where .= "$key = '$value'";
         }
 
+        $order = 'name ASC';
+
         try {
             $objDatabase = new Database('products_type');
             $result = $objDatabase->select($where, $order, $limit)->fetchAll(PDO::FETCH_CLASS, self::class);

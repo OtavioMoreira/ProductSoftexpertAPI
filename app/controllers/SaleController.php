@@ -47,6 +47,7 @@ class SaleController
 
         try {
             $objDatabase = new Database('sales');
+            $order = 'sales.created_at DESC';
             $joinClause = 'LEFT JOIN users ON sales.user_id = users.id';
             $joinClause .= ' INNER JOIN products ON sales.product_id = products.id';
             $joinClause .= ' INNER JOIN product_product_type ON products.id = product_product_type.product_id';
