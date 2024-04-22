@@ -1,4 +1,22 @@
--- INSERT INTO products (name, description, price, qtd) VALUES
---     ('Produto 1', 'Descrição do Produto 1', 10.99, 5),
---     ('Produto 2', 'Descrição do Produto 2', 20.50, 0),
---     ('Produto 3', 'Descrição do Produto 3', 15.75, 52);
+INSERT INTO products (name, description, price, qtd, created_at) 
+VALUES 
+('Smartphone XYZ', 'Um smartphone avançado com características impressionantes.', 999.99, 100, CURRENT_TIMESTAMP),
+('Smart TV LED 55"', 'Uma Smart TV com tela LED de alta definição.', 1499.00, 50, CURRENT_TIMESTAMP),
+('Notebook UltraSlim', 'Um notebook fino, leve e potente para produtividade máxima.', 1299.99, 30, CURRENT_TIMESTAMP),
+('Câmera DSLR Profissional', 'Uma câmera DSLR com resolução de imagem excepcional.', 1799.00, 20, CURRENT_TIMESTAMP),
+('Tablet Android 10"', 'Um tablet com sistema operacional Android e tela de 10 polegadas.', 299.99, 40, CURRENT_TIMESTAMP),
+('Monitor Curvo 27"', 'Um monitor de computador com tela curva de 27 polegadas.', 399.00, 25, CURRENT_TIMESTAMP),
+('Impressora Multifuncional', 'Uma impressora que imprime, digitaliza e copia com facilidade.', 199.99, 15, CURRENT_TIMESTAMP),
+('Caixa de Som Bluetooth', 'Uma caixa de som portátil com conexão Bluetooth.', 79.90, 60, CURRENT_TIMESTAMP),
+('Headphone Wireless', 'Um fone de ouvido sem fio com cancelamento de ruído.', 129.99, 35, CURRENT_TIMESTAMP),
+('Teclado Gamer RGB', 'Um teclado mecânico para jogos com iluminação RGB personalizável.', 149.00, 45, CURRENT_TIMESTAMP),
+('Mouse Óptico Sem Fio', 'Um mouse ergonômico e sem fio para uso diário.', 29.99, 75, CURRENT_TIMESTAMP),
+('Máquina de Café Expresso', 'Uma máquina de café que prepara espresso, cappuccino e mais.', 299.00, 10, CURRENT_TIMESTAMP),
+('Aspirador de Pó Robô', 'Um aspirador de pó automático que limpa sua casa sozinho.', 399.99, 5, CURRENT_TIMESTAMP),
+('Forno Elétrico 30L', 'Um forno elétrico compacto com capacidade de 30 litros.', 199.00, 20, CURRENT_TIMESTAMP),
+('Panela Elétrica de Arroz', 'Uma panela elétrica que cozinha arroz de forma fácil e rápida.', 49.90, 30, CURRENT_TIMESTAMP),
+('Liquidificador Turbo', 'Um liquidificador potente para preparar sucos e vitaminas.', 79.99, 25, CURRENT_TIMESTAMP),
+('Jogo de Panelas Antiaderente', 'Um conjunto de panelas com revestimento antiaderente.', 149.90, 15, CURRENT_TIMESTAMP),
+('Mochila para Notebook', 'Uma mochila resistente e acolchoada para transportar seu notebook.', 39.99, 50, CURRENT_TIMESTAMP),
+('Relógio Inteligente', 'Um relógio inteligente com monitoramento de atividades e notificações.', 199.99, 20, CURRENT_TIMESTAMP),
+('Fritadeira Elétrica', 'Uma fritadeira sem óleo para preparar alimentos saudáveis.', 129.00, 10, CURRENT_TIMESTAMP);

@@ -1,2 +1,22 @@
--- INSERT INTO product_product_type (product_id, product_type_id)
--- VALUES (1, 1);
+INSERT INTO product_product_type (product_id, product_type_id)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 2),
+    (4, 2),
+    (5, 3),
+    (6, 3),
+    (7, 1),
+    (8, 2),
+    (9, 3),
+    (10, 1),
+    (11, 3),
+    (12, 2),
+    (13, 1),
+    (14, 2),
+    (15, 2),
+    (16, 1),
+    (17, 2),
+    (18, 3),
+    (19, 1),
+    (20, 1);

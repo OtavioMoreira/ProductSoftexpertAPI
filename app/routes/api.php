@@ -325,6 +325,30 @@ switch ($route) {
         $controller->updateSales($requestData);
 
         break;
+    case '/api/getTopSoldProducts':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $controller = new SaleController();
+        $controller->getTopSoldProducts();
+
+        break;
+    case '/api/getTopCustomer':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $controller = new SaleController();
+        $controller->getTopCustomer();
+
+        break;
+    case '/api/getSalesByDay':
+        $valiteRequests = new ValidateMethods();
+        $valiteRequests->authorizeRoute($_SERVER['HTTP_AUTHORIZATION']);
+
+        $controller = new SaleController();
+        $controller->getSalesByDay();
+
+        break;
     default:
         http_response_code(404);
         echo json_encode(array('message' => 'Route not found'));

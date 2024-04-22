@@ -100,17 +100,19 @@ class Database
      * the result is returned.
      */
 
-    public function select($where = null, $order = null, $limit = null, $fields = '*', $join = null)
-    {
-        $where = strlen($where) ? 'WHERE ' . $where : '';
-        $order = strlen($order) ? 'ORDER BY ' . $order : '';
-        $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
-        $join = !empty($join) ? $join : '';
-
-        $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $join . ' ' . $where . ' ' . $order . ' ' . $limit;
-
-        return $this->execute($query);
-    }
+     public function select($where = null, $order = null, $limit = null, $fields = '*', $join = null, $groupBy = null)
+     {
+         $where = strlen($where) ? 'WHERE ' . $where : '';
+         $order = strlen($order) ? 'ORDER BY ' . $order : '';
+         $limit = strlen($limit) ? 'LIMIT ' . $limit : '';
+         $join = !empty($join) ? $join : '';
+         $groupBy = !empty($groupBy) ? 'GROUP BY ' . $groupBy : '';
+     
+         $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $join . ' ' . $where . ' ' . $groupBy . ' ' . $order . ' ' . $limit;
+     
+         return $this->execute($query);
+     }
+     
 
     /**
      * The `public function insert()` method in the `Database` class is used to insert a new

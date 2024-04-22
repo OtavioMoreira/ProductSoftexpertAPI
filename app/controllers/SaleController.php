@@ -36,25 +36,25 @@ class SaleController
     {
         $parameters = $_GET;
 
-        $where = '';
+        $whereClause = '';
         foreach ($parameters as $key => $value) {
-            if (!empty($where)) {
-                $where .= ' AND ';
+            if (!empty($whereClause)) {
+                $whereClause .= ' AND ';
             }
 
-            $where .= "$key = '$value'";
+            $whereClause .= "$key = '$value'";
         }
 
         try {
             $objDatabase = new Database('sales');
             $joinClause = 'LEFT JOIN users ON sales.user_id = users.id';
-            $joinClause .= ' LEFT JOIN products ON sales.product_id = products.id';
-            $joinClause .= ' LEFT JOIN product_product_type ON products.id = product_product_type.product_id';
-            $joinClause .= ' LEFT JOIN products_type ON product_product_type.product_type_id = products_type.id';
+            $joinClause .= ' INNER JOIN products ON sales.product_id = products.id';
+            $joinClause .= ' INNER JOIN product_product_type ON products.id = product_product_type.product_id';
+            $joinClause .= ' INNER JOIN products_type ON product_product_type.product_type_id = products_type.id';
 
             $fields = 'sales.id AS sale_id, users.username AS user_name, products.name AS products_name, products.price AS products_price, sales.qtd AS products_qtd, products_type.percentage AS products_percentage';
-            $result = $objDatabase->select($where, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_ASSOC);
-           
+            $result = $objDatabase->select($whereClause, $order, $limit, $fields, $joinClause)->fetchAll(PDO::FETCH_ASSOC);
+
             $jsonResult = json_encode($result);
             echo $jsonResult;
         } catch (\Exception $e) {
@@ -224,6 +224,58 @@ class SaleController
         } catch (\Exception $e) {
             echo "Erro: ",  $e->getMessage(), "\n";
             return false;
+        }
+    }
+
+    /**
+     * This PHP function retrieves the top 10 sold products from a 'sales' database table and outputs
+     * the result as a JSON-encoded string.
+     */
+    public function getTopSoldProducts()
+    {
+        try {
+            $objDatabase = new Database('sales');
+            $joinClause = 'LEFT JOIN products ON sales.product_id = products.id';
+            $result = $objDatabase->select(null, 'SUM(sales.qtd) DESC', '10', 'products.name AS product_name, SUM(sales.qtd) as total_sold', $joinClause, 'products.id')->fetchAll(PDO::FETCH_ASSOC);
+
+            $jsonResult = json_encode($result);
+            echo $jsonResult;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * The function `getTopCustomer` retrieves the top customer based on the total number of sales from
+     * a database table named 'sales'.
+     */
+    public function getTopCustomer()
+    {
+        try {
+            $objDatabase = new Database('sales');
+            $joinClause = 'LEFT JOIN users ON sales.user_id = users.id';
+            $result = $objDatabase->select(null, 'SUM(qtd) DESC', '1', 'users.username AS user_name, SUM(qtd) as total_purchased', $joinClause, 'users.id')->fetchAll(PDO::FETCH_ASSOC);
+            $jsonResult = json_encode($result);
+            echo $jsonResult;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
+        }
+    }
+
+    /**
+     * The function `getSalesByDay` retrieves and outputs the total quantity of sales made each day in
+     * JSON format from a database table named 'sales'.
+     */
+    public function getSalesByDay()
+    {
+        try {
+            $objDatabase = new Database('sales');
+            $joinClause = 'LEFT JOIN products ON sales.product_id = products.id';
+            $result = $objDatabase->select(null, 'sales.created_at', null, 'products.name AS product_name, sales.qtd, sales.created_at', $joinClause)->fetchAll(PDO::FETCH_ASSOC);
+            $jsonResult = json_encode($result);
+            echo $jsonResult;
+        } catch (\Exception $e) {
+            echo "Erro: ",  $e->getMessage(), "\n";
         }
     }
 }
